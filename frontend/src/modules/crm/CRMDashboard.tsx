@@ -4,7 +4,7 @@ import {
   UserGroupIcon, 
   CurrencyDollarIcon, 
   DocumentTextIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   PhoneIcon,
   EnvelopeIcon
 } from '@heroicons/react/24/outline'
@@ -22,13 +22,12 @@ const CRMDashboard: React.FC = () => {
       changeType: 'positive',
       icon: UserGroupIcon,
       color: 'blue'
-    },
-    {
+    },    {
       name: 'Leads Activos',
       value: '89',
       change: '+23%',
       changeType: 'positive',
-      icon: TrendingUpIcon,
+      icon: ArrowTrendingUpIcon,
       color: 'green'
     },
     {
@@ -277,9 +276,8 @@ const CRMDashboard: React.FC = () => {
             <Link to="/crm/customers/new" className="btn btn-outline flex flex-col items-center p-4">
               <UserGroupIcon className="h-8 w-8 mb-2" />
               <span className="text-sm">Nuevo Cliente</span>
-            </Link>
-            <Link to="/crm/leads/new" className="btn btn-outline flex flex-col items-center p-4">
-              <TrendingUpIcon className="h-8 w-8 mb-2" />
+            </Link>            <Link to="/crm/leads/new" className="btn btn-outline flex flex-col items-center p-4">
+              <ArrowTrendingUpIcon className="h-8 w-8 mb-2" />
               <span className="text-sm">Nuevo Lead</span>
             </Link>
             <Link to="/crm/invoices/new" className="btn btn-outline flex flex-col items-center p-4">

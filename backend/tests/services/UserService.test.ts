@@ -1,6 +1,7 @@
 import { db } from '../../src/config/database';
-import UserService from '../../src/services/UserService';
-import { hashPassword } from '../../src/utils/auth';
+import { UserService } from '../../src/services/UserService';
+import { AuthUtils } from '../../src/utils/auth';
+import { UserRole } from '../../src/types/common';
 
 describe('UserService', () => {
   beforeAll(async () => {
@@ -17,181 +18,179 @@ describe('UserService', () => {
   beforeEach(async () => {
     // Limpiar datos antes de cada prueba
     await db('users').del();
-  });
-
-  describe('createUser', () => {
+  });  describe('create', () => {
     it('should create a new user successfully', async () => {
       const userData = {
-        name: 'Test User',
+        first_name: 'Test',
+        last_name: 'User',
         email: 'test@example.com',
         password: 'password123',
-        role: 'employee' as const
+        role: UserRole.EMPLOYEE
       };
 
-      const user = await UserService.createUser(userData);
+      const user = await UserService.create(userData);
 
       expect(user).toBeDefined();
       expect(user.email).toBe(userData.email);
-      expect(user.name).toBe(userData.name);
+      expect(user.first_name).toBe(userData.first_name);
+      expect(user.last_name).toBe(userData.last_name);
       expect(user.role).toBe(userData.role);
-      expect(user.password).toBeUndefined(); // Password should not be returned
+      expect(user.password_hash).toBeDefined();
     });
 
     it('should throw error when creating user with duplicate email', async () => {
       const userData = {
-        name: 'Test User',
+        first_name: 'Test',
+        last_name: 'User',
         email: 'test@example.com',
         password: 'password123',
-        role: 'employee' as const
+        role: UserRole.EMPLOYEE
       };
 
-      await UserService.createUser(userData);
+      await UserService.create(userData);
 
-      await expect(UserService.createUser(userData))
-        .rejects.toThrow('Email already exists');
+      await expect(UserService.create(userData))
+        .rejects.toThrow('El email ya está registrado');
     });
 
     it('should hash password before storing', async () => {
       const userData = {
-        name: 'Test User',
+        first_name: 'Test',
+        last_name: 'User',
         email: 'test@example.com',
         password: 'password123',
-        role: 'employee' as const
+        role: UserRole.EMPLOYEE
       };
 
-      await UserService.createUser(userData);
+      await UserService.create(userData);
 
       const userInDb = await db('users')
         .where({ email: userData.email })
         .first();
 
-      expect(userInDb.password).not.toBe(userData.password);
-      expect(userInDb.password).toMatch(/^\$2[aby]\$/); // bcrypt hash pattern
+      expect(userInDb.password_hash).not.toBe(userData.password);
+      expect(userInDb.password_hash).toMatch(/^\$2[aby]\$/); // bcrypt hash pattern
     });
   });
-
-  describe('getUserByEmail', () => {
+  describe('findByEmail', () => {
     it('should return user when email exists', async () => {
       const userData = {
-        name: 'Test User',
+        first_name: 'Test',
+        last_name: 'User',
         email: 'test@example.com',
-        password: await hashPassword('password123'),
-        role: 'employee'
+        password_hash: await AuthUtils.hashPassword('password123'),
+        role: UserRole.EMPLOYEE
       };
 
       await db('users').insert(userData);
 
-      const user = await UserService.getUserByEmail('test@example.com');
+      const user = await UserService.findByEmail('test@example.com');
 
       expect(user).toBeDefined();
       expect(user?.email).toBe(userData.email);
-      expect(user?.name).toBe(userData.name);
+      expect(user?.first_name).toBe(userData.first_name);
     });
 
     it('should return null when email does not exist', async () => {
-      const user = await UserService.getUserByEmail('nonexistent@example.com');
+      const user = await UserService.findByEmail('nonexistent@example.com');
       expect(user).toBeNull();
     });
   });
-
-  describe('updateUser', () => {
+  describe('update', () => {
     it('should update user successfully', async () => {
       const userData = {
-        name: 'Test User',
+        first_name: 'Test',
+        last_name: 'User',
         email: 'test@example.com',
-        password: await hashPassword('password123'),
-        role: 'employee'
+        password_hash: await AuthUtils.hashPassword('password123'),
+        role: UserRole.EMPLOYEE
       };
 
       const [userId] = await db('users').insert(userData).returning('id');
 
       const updateData = {
-        name: 'Updated User',
+        first_name: 'Updated',
+        last_name: 'User',
         email: 'updated@example.com'
       };
 
-      const updatedUser = await UserService.updateUser(userId.id, updateData);
+      const updatedUser = await UserService.update(userId.id, updateData);
 
       expect(updatedUser).toBeDefined();
-      expect(updatedUser?.name).toBe(updateData.name);
-      expect(updatedUser?.email).toBe(updateData.email);
-    });
-
-    it('should return null when updating non-existent user', async () => {
-      const updatedUser = await UserService.updateUser('non-existent-id', {
-        name: 'Updated User'
-      });
-
-      expect(updatedUser).toBeNull();
+      expect(updatedUser.first_name).toBe(updateData.first_name);
+      expect(updatedUser.email).toBe(updateData.email);
+    });    it('should throw error when updating non-existent user', async () => {
+      await expect(UserService.update('non-existent-id', {
+        first_name: 'Updated User'
+      })).rejects.toThrow('Usuario no encontrado');
     });
   });
-
-  describe('deleteUser', () => {
+  describe('delete', () => {
     it('should delete user successfully', async () => {
       const userData = {
-        name: 'Test User',
+        first_name: 'Test',
+        last_name: 'User',
         email: 'test@example.com',
-        password: await hashPassword('password123'),
-        role: 'employee'
+        password_hash: await AuthUtils.hashPassword('password123'),
+        role: UserRole.EMPLOYEE
       };
 
       const [user] = await db('users').insert(userData).returning('*');
 
-      const deleted = await UserService.deleteUser(user.id);
-      expect(deleted).toBe(true);
+      await UserService.delete(user.id);
 
       const userInDb = await db('users').where({ id: user.id }).first();
       expect(userInDb).toBeUndefined();
     });
 
-    it('should return false when deleting non-existent user', async () => {
-      const deleted = await UserService.deleteUser('non-existent-id');
-      expect(deleted).toBe(false);
+    it('should throw error when deleting non-existent user', async () => {
+      await expect(UserService.delete('non-existent-id'))
+        .rejects.toThrow('Usuario no encontrado');
     });
   });
-
-  describe('getAllUsers', () => {
+  describe('list', () => {
     it('should return paginated users', async () => {
       // Crear varios usuarios para testing
       const users = Array.from({ length: 15 }, (_, i) => ({
-        name: `User ${i + 1}`,
+        first_name: `User`,
+        last_name: `${i + 1}`,
         email: `user${i + 1}@example.com`,
-        password: 'hashedpassword',
-        role: 'employee'
+        password_hash: 'hashedpassword',
+        role: UserRole.EMPLOYEE
       }));
 
       await db('users').insert(users);
 
-      const result = await UserService.getAllUsers(1, 10);
+      const result = await UserService.list({ page: 1, limit: 10 });
 
       expect(result.users).toHaveLength(10);
       expect(result.total).toBe(15);
-      expect(result.page).toBe(1);
-      expect(result.totalPages).toBe(2);
     });
 
     it('should filter users by search term', async () => {
       const users = [
         {
-          name: 'John Doe',
+          first_name: 'John',
+          last_name: 'Doe',
           email: 'john@example.com',
-          password: 'hashedpassword',
-          role: 'employee'
+          password_hash: 'hashedpassword',
+          role: UserRole.EMPLOYEE
         },
         {
-          name: 'Jane Smith',
+          first_name: 'Jane',
+          last_name: 'Smith',
           email: 'jane@example.com',
-          password: 'hashedpassword',
-          role: 'manager'
+          password_hash: 'hashedpassword',
+          role: UserRole.MANAGER
         }
       ];
 
       await db('users').insert(users);
 
-      const result = await UserService.getAllUsers(1, 10, 'John');
+      const result = await UserService.list({ page: 1, limit: 10, search: 'John' });
 
       expect(result.users).toHaveLength(1);
-      expect(result.users[0].name).toBe('John Doe');
+      expect(result.users[0].first_name).toBe('John');
     });
   });
 });

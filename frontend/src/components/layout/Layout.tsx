@@ -1,5 +1,4 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Header from './Header'
 
@@ -12,7 +11,6 @@ interface LayoutProps {
  * pero modernizada con componentes React
  */
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = React.useState(false)
 
   return (

@@ -1,0 +1,66 @@
+{
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.suggest.autoImports": true,
+  "typescript.preferences.includeSymbolsFromNodeModules": true,
+  "typescript.validate.enable": true,
+  "typescript.surveys.enabled": false,
+  
+  // Configuración específica para archivos de prueba
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  
+  // Configuración de TypeScript para archivos de test
+  "typescript.tsc.autoDetect": "on",
+  "typescript.preferences.enableImportsOnFileMove": true,
+  
+  // Configuración específica para Jest
+  "jest.autoRun": "off",
+  "jest.showCoverageOnLoad": false,
+  // Configuración de archivos
+  "files.associations": {
+    "*.test.ts": "typescript",
+    "*.spec.ts": "typescript",
+    "*.css": "tailwindcss"
+  },
+    // Configuración de CSS y Tailwind
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "postcss.validate": false,
+  
+  // Configuración específica para archivos CSS
+  "[css]": {
+    "editor.suggest.insertMode": "replace",
+    "editor.suggest.snippetsPreventQuickSuggestions": false
+  },
+  
+  // Configuración específica para archivos PostCSS
+  "[postcss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  
+  // Tailwind CSS IntelliSense
+  "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.includeLanguages": {
+    "typescript": "typescript",
+    "typescriptreact": "typescriptreact"
+  },
+  "tailwindCSS.lint.cssConflict": "warning",
+  "tailwindCSS.lint.invalidApply": "error",
+  "tailwindCSS.lint.invalidConfigPath": "error",
+  "tailwindCSS.lint.invalidScreen": "error",
+  "tailwindCSS.lint.invalidTailwindDirective": "error",
+  "tailwindCSS.lint.invalidVariant": "error",
+  "tailwindCSS.lint.recommendedVariantOrder": "warning",
+  
+  // Configuración de ESLint/TSLint
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ]
+}

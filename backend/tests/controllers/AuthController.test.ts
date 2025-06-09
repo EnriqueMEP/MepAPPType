@@ -1,13 +1,32 @@
 import request from 'supertest';
 import express from 'express';
-import { db } from '../../src/config/database';
-import authRoutes from '@/routes/auth';
-import { ErrorHandler } from '@/middleware/errorHandler';
+import authRoutes from '../../src/routes/auth';
+import { ErrorHandler } from '../../src/middleware/errorHandler';
+import { testDb as db } from '../../src/config/database.test';
+
+// Mock del UserService
+jest.mock('../../src/services/UserService', () => ({
+  UserService: {
+    create: jest.fn(),
+    findByEmail: jest.fn(),
+    update: jest.fn(),
+  }
+}));
+
+// Mock del AuthUtils
+jest.mock('../../src/utils/auth', () => ({
+  AuthUtils: {
+    hashPassword: jest.fn().mockResolvedValue('hashed_password'),
+    comparePassword: jest.fn(),
+    generateToken: jest.fn().mockReturnValue('mock_token'),
+    verifyToken: jest.fn(),
+  }
+}));
 
 const app = express();
 app.use(express.json());
 app.use('/auth', authRoutes);
-app.use(ErrorHandler);
+app.use(ErrorHandler.handle);
 
 describe('AuthController', () => {
   beforeAll(async () => {

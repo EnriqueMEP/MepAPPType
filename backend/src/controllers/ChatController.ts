@@ -239,10 +239,9 @@ export class ChatController {  // Chat Rooms
     try {
       if (!req.user) {
         return ApiResponseBuilder.error(res, 'User not authenticated', 401);
-      }
-      const messageData = req.body;
-      // Set user_id to current user (not sender_id)
-      messageData.user_id = req.user.id;
+      }      const messageData = req.body;
+      // Set sender_id to current user
+      messageData.sender_id = req.user.id;
       
       // Check if user has access to this room
       const room = await ChatService.getChatRoomById(messageData.room_id);
@@ -269,14 +268,13 @@ export class ChatController {  // Chat Rooms
       }
       const { id } = req.params;
       const { content } = req.body;
-      
-      // Check if user owns this message
+        // Check if user owns this message
       const message = await ChatService.getMessageById(id);
       if (!message) {
         return ApiResponseBuilder.error(res, 'Message not found', 404);
       }
       
-      if (message.user_id !== req.user.id) {
+      if (message.sender_id !== req.user.id) {
         return ApiResponseBuilder.error(res, 'You can only edit your own messages', 403);
       }
       
@@ -299,14 +297,13 @@ export class ChatController {  // Chat Rooms
       }
       const { id } = req.params;
       const { permanent = false } = req.query;
-      
-      // Check if user owns this message
+        // Check if user owns this message
       const message = await ChatService.getMessageById(id);
       if (!message) {
         return ApiResponseBuilder.error(res, 'Message not found', 404);
       }
       
-      if (message.user_id !== req.user.id) {
+      if (message.sender_id !== req.user.id) {
         return ApiResponseBuilder.error(res, 'You can only delete your own messages', 403);
       }
       

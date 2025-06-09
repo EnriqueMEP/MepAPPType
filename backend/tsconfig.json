@@ -1,4 +1,5 @@
-{  "compilerOptions": {
+{
+  "compilerOptions": {
     "target": "ES2020",
     "lib": ["ES2020"],
     "module": "commonjs",
@@ -26,7 +27,9 @@
       "@utils/*": ["./utils/*"],
       "@types/*": ["./types/*"]
     },
-    "declaration": false,
+    "declaration": true,
+    "declarationMap": true,
+    "composite": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },

@@ -9,7 +9,6 @@ import {
   ChatBubbleLeftRightIcon,
   ClipboardDocumentListIcon,
   UsersIcon,
-  Cog6ToothIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline'
 

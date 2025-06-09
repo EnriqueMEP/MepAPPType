@@ -21,14 +21,12 @@ module.exports = {
     'text',
     'lcov',
     'html'
-  ],
-  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
+  ],  setupFilesAfterEnv: ['<rootDir>/tests/jest.setup.ts'],
   testTimeout: 10000,
+  preset: 'ts-jest/presets/default',
   globals: {
     'ts-jest': {
-      tsconfig: {
-        types: ['node', 'jest']
-      }
+      tsconfig: 'tsconfig.test.json'
     }
   },
   moduleNameMapper: {

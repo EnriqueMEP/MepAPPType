@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./backend/src",
+    "paths": {
+      "@/*": ["./backend/src/*"],
+      "@config/*": ["./backend/src/config/*"],
+      "@controllers/*": ["./backend/src/controllers/*"],
+      "@middleware/*": ["./backend/src/middleware/*"],
+      "@models/*": ["./backend/src/models/*"],
+      "@routes/*": ["./backend/src/routes/*"],
+      "@services/*": ["./backend/src/services/*"],
+      "@utils/*": ["./backend/src/utils/*"],
+      "@types/*": ["./backend/src/types/*"]
+    }
+  },
+  "include": [
+    "backend/src/**/*",
+    "backend/tests/**/*"
+  ],
+  "exclude": [
+    "backend/node_modules",
+    "backend/dist",
+    "frontend/**/*"
+  ],
+  "references": [
+    { "path": "./backend/tsconfig.json" },
+    { "path": "./backend/tsconfig.test.json" }
+  ]
+}
