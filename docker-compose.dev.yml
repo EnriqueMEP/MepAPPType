@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # Desarrollo - Base de datos solamente
+  database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: mep_projects_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - mep-dev-network
+
+  # Desarrollo - Redis
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_dev_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - mep-dev-network
+
+  # Desarrollo - Adminer para gestión de BD
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - mep-dev-network
+    depends_on:
+      - database
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  redis_dev_data:
+    driver: local
+
+networks:
+  mep-dev-network:
+    driver: bridge
