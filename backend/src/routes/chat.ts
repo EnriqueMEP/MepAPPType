@@ -1,8 +1,8 @@
 // filepath: backend/src/routes/chat.ts
 import { Router } from 'express';
-import ChatController from '@/controllers/ChatController';
-import authenticateToken from '@/middleware/auth';
-import rateLimiter from '@/middleware/rateLimiting';
+import ChatController from '../controllers/ChatController';
+import authenticateToken from '../middleware/auth';
+import rateLimiter from '../middleware/rateLimiting';
 
 const router = Router();
 

@@ -1,7 +1,6 @@
 const path = require('path');
 
-module.exports = {
-  development: {
+module.exports = {  development: {
     client: 'pg',
     connection: {
       host: process.env.DB_HOST || 'localhost',
@@ -9,11 +8,9 @@ module.exports = {
       user: process.env.DB_USER || 'mep_user',
       password: process.env.DB_PASSWORD || 'mep_password',
       database: process.env.DB_NAME || 'mep_projects_db'
-    },
-    migrations: {
-      directory: path.join(__dirname, 'src', 'database', 'migrations')
-    },
-    seeds: {
+    },    migrations: {
+      directory: path.join(__dirname, 'src', 'database', 'migrations-js')
+    },    seeds: {
       directory: path.join(__dirname, 'src', 'database', 'seeds')
     },
     pool: {

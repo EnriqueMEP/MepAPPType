@@ -1,68 +1,79 @@
-import { Knex } from 'knex';
-import { UserRole, UserStatus } from '../../types/common';
-import { AuthUtils } from '../../utils/auth';
-import { IdGenerator, DateUtils } from '../../utils/helpers';
+const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
 
-export async function seed(knex: Knex): Promise<void> {
+exports.seed = async function(knex) {
   // Limpiar tablas existentes
   await knex('users').del();
   await knex('departments').del();
   await knex('positions').del();
 
-  const now = DateUtils.now();
+  const now = new Date();
 
+  // Generar UUIDs
+  const adminId = uuidv4();
+  const managerId = uuidv4();
+  const employeeId = uuidv4();
+  const clientId = uuidv4();
+  const deptTechId = uuidv4();
+  const deptHrId = uuidv4();
+
+  // Hashear contraseñas
+  const adminPassword = await bcrypt.hash('admin123456', 12);
+  const managerPassword = await bcrypt.hash('manager123456', 12);
+  const employeePassword = await bcrypt.hash('employee123456', 12);
+  const clientPassword = await bcrypt.hash('client123456', 12);
   // Crear usuarios de prueba
   const users = [
     {
-      id: IdGenerator.generate(),
+      id: adminId,
       email: 'admin@mep-projects.com',
-      password_hash: await AuthUtils.hashPassword('admin123456'),
+      password_hash: adminPassword,
       first_name: 'Administrador',
       last_name: 'Sistema',
-      role: UserRole.SUPER_ADMIN,
-      status: UserStatus.ACTIVE,
+      role: 'super_admin',
+      status: 'active',
       email_verified: true,
       email_verified_at: now,
       created_at: now,
       updated_at: now,
     },
     {
-      id: IdGenerator.generate(),
+      id: managerId,
       email: 'manager@mep-projects.com',
-      password_hash: await AuthUtils.hashPassword('manager123456'),
+      password_hash: managerPassword,
       first_name: 'María',
       last_name: 'González',
       phone: '+1234567890',
-      role: UserRole.MANAGER,
-      status: UserStatus.ACTIVE,
+      role: 'manager',
+      status: 'active',
       email_verified: true,
       email_verified_at: now,
       created_at: now,
       updated_at: now,
     },
     {
-      id: IdGenerator.generate(),
+      id: employeeId,
       email: 'employee@mep-projects.com',
-      password_hash: await AuthUtils.hashPassword('employee123456'),
+      password_hash: employeePassword,
       first_name: 'Juan',
       last_name: 'Pérez',
       phone: '+0987654321',
-      role: UserRole.EMPLOYEE,
-      status: UserStatus.ACTIVE,
+      role: 'employee',
+      status: 'active',
       email_verified: true,
       email_verified_at: now,
       created_at: now,
       updated_at: now,
     },
     {
-      id: IdGenerator.generate(),
+      id: clientId,
       email: 'client@mep-projects.com',
-      password_hash: await AuthUtils.hashPassword('client123456'),
+      password_hash: clientPassword,
       first_name: 'Ana',
       last_name: 'López',
       phone: '+1122334455',
-      role: UserRole.CLIENT,
-      status: UserStatus.ACTIVE,
+      role: 'client',
+      status: 'active',
       email_verified: true,
       email_verified_at: now,
       created_at: now,
@@ -71,14 +82,13 @@ export async function seed(knex: Knex): Promise<void> {
   ];
 
   await knex('users').insert(users);
-
   // Crear departamentos de prueba
   const departments = [
     {
-      id: IdGenerator.generate(),
+      id: deptTechId,
       name: 'Tecnología',
       description: 'Departamento de desarrollo y tecnología',
-      manager_id: users[1].id, // María González
+      manager_id: managerId,
       budget: 500000,
       location: 'Oficina Principal',
       status: 'active',
@@ -86,22 +96,11 @@ export async function seed(knex: Knex): Promise<void> {
       updated_at: now,
     },
     {
-      id: IdGenerator.generate(),
+      id: deptHrId,
       name: 'Recursos Humanos',
-      description: 'Gestión del talento humano',
-      manager_id: users[1].id, // María González
+      description: 'Gestión de personal y talento humano',
+      manager_id: managerId,
       budget: 200000,
-      location: 'Oficina Principal',
-      status: 'active',
-      created_at: now,
-      updated_at: now,
-    },
-    {
-      id: IdGenerator.generate(),
-      name: 'Ventas',
-      description: 'Departamento comercial y ventas',
-      manager_id: users[1].id, // María González
-      budget: 300000,
       location: 'Oficina Principal',
       status: 'active',
       created_at: now,
@@ -110,14 +109,13 @@ export async function seed(knex: Knex): Promise<void> {
   ];
 
   await knex('departments').insert(departments);
-
   // Crear posiciones de prueba
   const positions = [
     {
-      id: IdGenerator.generate(),
+      id: uuidv4(),
       title: 'Desarrollador Full Stack',
       description: 'Desarrollo de aplicaciones web y móviles',
-      department_id: departments[0].id, // Tecnología
+      department_id: deptTechId,
       level: 'mid',
       min_salary: 50000,
       max_salary: 80000,
@@ -128,29 +126,15 @@ export async function seed(knex: Knex): Promise<void> {
       updated_at: now,
     },
     {
-      id: IdGenerator.generate(),
+      id: uuidv4(),
       title: 'Especialista en RRHH',
       description: 'Gestión de recursos humanos y nómina',
-      department_id: departments[1].id, // RRHH
+      department_id: deptHrId,
       level: 'senior',
       min_salary: 45000,
       max_salary: 65000,
       requirements: 'Título en RRHH, 5+ años experiencia',
       responsibilities: 'Reclutamiento, nómina, evaluaciones de desempeño',
-      status: 'active',
-      created_at: now,
-      updated_at: now,
-    },
-    {
-      id: IdGenerator.generate(),
-      title: 'Ejecutivo de Ventas',
-      description: 'Ventas B2B y gestión de clientes',
-      department_id: departments[2].id, // Ventas
-      level: 'junior',
-      min_salary: 35000,
-      max_salary: 55000,
-      requirements: 'Experiencia en ventas, CRM',
-      responsibilities: 'Prospección, cierre de ventas, atención al cliente',
       status: 'active',
       created_at: now,
       updated_at: now,
@@ -171,10 +155,10 @@ export async function seed(knex: Knex): Promise<void> {
 🏢 Departamentos: ${departments.length}
 💼 Posiciones: ${positions.length}
   `);
-}
+};
 
-export async function down(knex: Knex): Promise<void> {
+exports.down = async function(knex) {
   await knex('positions').del();
   await knex('departments').del();
   await knex('users').del();
-}
+};

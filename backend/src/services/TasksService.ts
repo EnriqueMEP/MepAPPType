@@ -15,7 +15,7 @@ import {
   ProjectStatus,
   TaskStatus,
   TaskPriority
-} from '@/types/tasks';
+} from '../types/tasks';
 
 export class TasksService {
   // Projects

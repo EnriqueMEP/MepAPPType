@@ -10,12 +10,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '@shared': path.resolve(__dirname, '../shared'),
     },
-  },
-  server: {
-    port: 3000,
+  },  server: {
+    port: 5173,
     proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
+      '/api/v1': {
+        target: 'http://localhost:3000',
         changeOrigin: true,
       },
     },

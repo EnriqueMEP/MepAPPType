@@ -1,8 +1,8 @@
 // filepath: backend/src/routes/rrhh.ts
 import { Router } from 'express';
-import RRHHController from '@/controllers/RRHHController';
-import  authenticateToken  from '@/middleware/auth';
-import  rateLimiter  from '@/middleware/rateLimiting';
+import RRHHController from '../controllers/RRHHController';
+import  authenticateToken  from '../middleware/auth';
+import  rateLimiter  from '../middleware/rateLimiting';
 
 const router = Router();
 

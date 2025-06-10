@@ -1,8 +1,8 @@
 // filepath: backend/src/routes/crm.ts
 import { Router } from 'express';
-import CRMController from '@/controllers/CRMController';
-import authenticateToken from '@/middleware/auth';
-import rateLimiter from '@/middleware/rateLimiting';
+import CRMController from '../controllers/CRMController';
+import authenticateToken from '../middleware/auth';
+import rateLimiter from '../middleware/rateLimiting';
 
 const router = Router();
 

@@ -6,12 +6,12 @@ import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
-import { config } from '@config/index';
-import { swaggerSpec } from '@config/swagger';
-import { EmailService } from '@services/EmailService';
-import routes from '@routes/index';
-import { ErrorHandler } from '@middleware/errorHandler';
-import { generalLimiter, requestSizeLimit } from '@middleware/rateLimiting';
+import { config } from './config/index';
+import { swaggerSpec } from './config/swagger';
+import { EmailService } from './services/EmailService';
+import routes from './routes/index';
+import { ErrorHandler } from './middleware/errorHandler';
+import { generalLimiter, requestSizeLimit } from './middleware/rateLimiting';
 
 class AppServer {
   private app: express.Application;

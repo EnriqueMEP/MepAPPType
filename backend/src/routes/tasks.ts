@@ -1,8 +1,8 @@
 // filepath: backend/src/routes/tasks.ts
 import { Router } from 'express';
-import TasksController from '@/controllers/TasksController';
-import  authenticateToken  from '@/middleware/auth';
-import  rateLimiter  from '@/middleware/rateLimiting';
+import TasksController from '../controllers/TasksController';
+import  authenticateToken  from '../middleware/auth';
+import  rateLimiter  from '../middleware/rateLimiting';
 
 const router = Router();
 

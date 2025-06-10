@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { config } from '@config/index';
+import { config } from '../config/index';
 import authRoutes from './auth';
 import crmRoutes from './crm';
 import rrhhRoutes from './rrhh';

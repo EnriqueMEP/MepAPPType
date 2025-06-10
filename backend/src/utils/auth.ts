@@ -11,7 +11,7 @@ export class AuthUtils {
 
   static async comparePassword(password: string, hash: string): Promise<boolean> {
     return bcrypt.compare(password, hash);
-  }  static generateAccessToken(user: User): string {
+  }  static generateAccessToken(user: User, rememberMe?: boolean): string {
     const payload: JwtPayload = {
       id: user.id,
       email: user.email,
@@ -22,10 +22,14 @@ export class AuthUtils {
     if (!secret) {
       throw new Error('JWT secret is not configured');
     }
-      return jwt.sign(payload, secret, {
-      expiresIn: '7d', // Valor hardcoded válido como fallback
+    
+    // Si rememberMe es true, el token dura más tiempo
+    const expiresIn = rememberMe ? '30d' : '7d';
+    
+    return jwt.sign(payload, secret, {
+      expiresIn: expiresIn,
     });
-  }  static generateRefreshToken(user: User): string {
+  }static generateRefreshToken(user: User): string {
     const payload: JwtPayload = {
       id: user.id,
       email: user.email,

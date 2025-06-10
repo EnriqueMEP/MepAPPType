@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import FileController from '@/controllers/FileController';
-import FileService from '@/services/FileService';
-import  authenticateToken  from '@/middleware/auth';
+import FileController from '../controllers/FileController';
+import FileService from '../services/FileService';
+import  authenticateToken  from '../middleware/auth';
 import rateLimit from 'express-rate-limit';
 
 const router = Router();
