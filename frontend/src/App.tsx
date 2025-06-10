@@ -13,6 +13,9 @@ import TasksModule from './modules/tasks/TasksModule'
 import UsersModule from './modules/users/UsersModule'
 import { LoadingSpinner } from './components/ui/LoadingSpinner'
 
+// 🎨 Importar el nuevo sistema de diseño
+import MEPAppDemo from './components/MEPAppDemo'
+
 /**
  * Aplicación principal MEP-Projects
  * Conserva la arquitectura modular de tu aplicación original
@@ -43,6 +46,13 @@ function App() {
 
   if (!isAuthenticated) {
     return <Login />
+  }
+
+  // 🎨 DEMO MODE - Mostrar el nuevo sistema de diseño
+  // Comentar las siguientes 3 líneas para volver al layout original
+  const showDesignDemo = true // Cambiar a false para usar layout original
+  if (showDesignDemo) {
+    return <MEPAppDemo />
   }
 
   return (
